@@ -1,0 +1,924 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package brillaproject;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSetMetaData;
+import java.util.Date;
+
+/**
+ *
+ * @author Lenovo
+ */
+public class Pemesanan extends javax.swing.JFrame {
+
+    /**
+     * Creates new form Pemesanan
+     */
+    Connection con = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    public Pemesanan() {
+        initComponents();
+        combobox();
+        resetPesananBox();
+        EditData.setVisible(false);
+    }
+
+    private static int getExistingCustomerId(Connection connection, String namaPelanggan) throws SQLException {
+        int existingCustomerId = 0;
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(
+                "SELECT ID_Pelanggan FROM Pelanggan WHERE Nama_Pelanggan = ?"
+        )) {
+            preparedStatement.setString(1, namaPelanggan);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    existingCustomerId = resultSet.getInt("ID_Pelanggan");
+                }
+            }
+        }
+
+        return existingCustomerId;
+    }
+
+    private void combobox() {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url
+                    = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                    + "database=ProjectBD;"
+                    + "user=sa;"
+                    + "password=Eufraa7183;"
+                    + "encrypt=false;"
+                    + "trustServerCertificate=false;"
+                    + "loginTimeout=30;";
+            con = DriverManager.getConnection(url);
+            String sql = "select * from Menu";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String name = rs.getString("Nama_Menu");
+                jComboBox1.addItem(name);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+
+    private void resetPesananBox() {
+        DefaultTableModel model = (DefaultTableModel) tabelDetailPemesanan.getModel();
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url
+                    = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                    + "database=ProjectBD;"
+                    + "user=sa;"
+                    + "password=Eufraa7183;"
+                    + "encrypt=false;"
+                    + "trustServerCertificate=false;"
+                    + "loginTimeout=30;";
+            con = DriverManager.getConnection(url);
+            String sql = "DELETE FROM DetailPesananType";
+            pst = con.prepareStatement(sql);
+            model.setNumRows(0);
+
+            int affectedRows = pst.executeUpdate();
+            if (affectedRows > 0) {
+                // Clear all rows in the DefaultTableModel
+                model.setRowCount(0);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+
+        }
+
+    }
+
+    private void resetPemesanan() {
+        NamaPelanggan.setText("");
+        noTelpPelanggan.setText("");
+        alamatPelanggan.setText("");
+        JumlahPesanan.setText("");
+        TanggalPengiriman.setDate(null);
+        idPesanan.setText("");
+        resetPesananBox();
+
+    }
+
+    private int getAccessMenuID() {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url
+                    = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                    + "database=ProjectBD;"
+                    + "user=sa;"
+                    + "password=Eufraa7183;"
+                    + "encrypt=false;"
+                    + "trustServerCertificate=false;"
+                    + "loginTimeout=30;";
+            con = DriverManager.getConnection(url);
+            String sql = "SELECT ID_Menu FROM Menu WHERE Nama_Menu = ?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, jComboBox1.getSelectedItem().toString());
+            rs = pst.executeQuery();
+            int idMenu = rs.getInt("ID_Menu");
+            return idMenu;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+
+        }
+        return 0; //kyknya ini salah - sekedar biar ga error JAN LUPA DIBENERIN!
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel2 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        alamatPelanggan = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        cariData = new javax.swing.JButton();
+        EditData = new javax.swing.JButton();
+        noTelpPelanggan = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tabelDetailPemesanan = new javax.swing.JTable();
+        addDetailPemesanan = new javax.swing.JButton();
+        idPesanan = new javax.swing.JTextField();
+        deleteDetailPemesanan = new javax.swing.JButton();
+        TambahData = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        Keluar = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        JumlahPesanan = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        TanggalPengiriman = new com.toedter.calendar.JDateChooser();
+        NamaPelanggan = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        resetBtn = new javax.swing.JButton();
+
+        jLabel2.setText("jLabel2");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(21, 132, 129));
+        jPanel1.setForeground(new java.awt.Color(0, 0, 0));
+
+        alamatPelanggan.setBackground(new java.awt.Color(130, 193, 192));
+
+        jLabel8.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel8.setFont(new java.awt.Font("Constantia", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Alamat pelanggan    :");
+
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setText("id_Pesanan");
+
+        cariData.setText("CariData");
+        cariData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cariDataActionPerformed(evt);
+            }
+        });
+
+        EditData.setText("SaveData");
+        EditData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditDataActionPerformed(evt);
+            }
+        });
+
+        noTelpPelanggan.setBackground(new java.awt.Color(130, 193, 192));
+
+        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel5.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Menu                         :");
+
+        jComboBox1.setToolTipText("");
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        tabelDetailPemesanan.setBackground(new java.awt.Color(255, 255, 255));
+        tabelDetailPemesanan.setForeground(new java.awt.Color(0, 0, 0));
+        tabelDetailPemesanan.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane3.setViewportView(tabelDetailPemesanan);
+
+        addDetailPemesanan.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
+        addDetailPemesanan.setText("+");
+        addDetailPemesanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addDetailPemesananActionPerformed(evt);
+            }
+        });
+
+        idPesanan.setBackground(new java.awt.Color(130, 193, 192));
+
+        deleteDetailPemesanan.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        deleteDetailPemesanan.setText("-");
+        deleteDetailPemesanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteDetailPemesananActionPerformed(evt);
+            }
+        });
+
+        TambahData.setText("TambahData");
+        TambahData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TambahDataActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel4.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Jumlah Pesanan       :");
+
+        Keluar.setText("Keluar");
+        Keluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                KeluarActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Constantia", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Tanggal Pengiriman  :");
+
+        JumlahPesanan.setBackground(new java.awt.Color(130, 193, 192));
+        JumlahPesanan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JumlahPesananActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Constantia", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setText("No_Telp Pelanggan  :");
+
+        TanggalPengiriman.setBackground(new java.awt.Color(130, 193, 192));
+        TanggalPengiriman.setForeground(new java.awt.Color(130, 193, 192));
+        TanggalPengiriman.setToolTipText("]");
+        TanggalPengiriman.setAutoscrolls(true);
+
+        NamaPelanggan.setBackground(new java.awt.Color(130, 193, 192));
+        NamaPelanggan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NamaPelangganActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Constantia", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Nama Pelanggan      :");
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("FORM PEMESANAN");
+        jLabel1.setDoubleBuffered(true);
+
+        resetBtn.setText("Reset");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(332, 332, 332))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(JumlahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(282, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(TambahData, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(EditData, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(idPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(cariData)))
+                        .addContainerGap())))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(68, 68, 68)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(45, 45, 45)
+                                .addComponent(Keluar, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(alamatPelanggan, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(noTelpPelanggan)
+                            .addComponent(NamaPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(369, 369, 369))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(255, 255, 255)
+                        .addComponent(TanggalPengiriman, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(372, Short.MAX_VALUE)))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGap(24, 24, 24)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(deleteDetailPemesanan)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(addDetailPemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 893, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(34, 34, 34)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(idPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cariData))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGap(70, 70, 70)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addGap(65, 65, 65)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(JumlahPesanan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(110, 110, 110)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TambahData)
+                    .addComponent(resetBtn)
+                    .addComponent(EditData))
+                .addGap(34, 34, 34))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(96, 96, 96)
+                    .addComponent(Keluar)
+                    .addGap(30, 30, 30)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(NamaPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(alamatPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(noTelpPelanggan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9))
+                    .addGap(18, 18, 18)
+                    .addComponent(TanggalPengiriman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(54, 54, 54)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(deleteDetailPemesanan)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(addDetailPemesanan, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(78, Short.MAX_VALUE)))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 2, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void EditDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditDataActionPerformed
+
+        int idP = Integer.parseInt(idPesanan.getText());
+        int idp2 = 0;
+        try {
+
+            // Connection to the database
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                    + "database=ProjectBD;"
+                    + "user=sa;"
+                    + "password=Eufraa7183;"
+                    + "encrypt=false;"
+                    + "trustServerCertificate=false;"
+                    + "loginTimeout=30;";
+
+            try (Connection con = DriverManager.getConnection(url)) {
+
+                String idp2SQL = "SELECT ID_Pelanggan FROM pesanan WHERE ID_Pesanan = ?";
+                pst = con.prepareStatement(idp2SQL);
+                pst.setInt(1, idP);  // Set the actual value for idpesanan
+                ResultSet customerIDResult = pst.executeQuery();
+
+                while (customerIDResult.next()) {
+                    idp2 = customerIDResult.getInt("ID_Pelanggan");
+                    // Do something with idp2
+                }
+
+                // Update statement using PreparedStatement
+                String updatePelangganSQL = "UPDATE Pelanggan\n"
+                        + "SET NoTelp_Pelanggan = ?,\n"
+                        + "    Nama_Pelanggan = ?,\n"
+                        + "    Alamat_Pelanggan = ?\n"
+                        + "WHERE ID_Pelanggan = ?";
+
+                try (PreparedStatement pst = con.prepareStatement(updatePelangganSQL)) {
+                    // Set values for parameters in the update statement
+                    pst.setString(1, noTelpPelanggan.getText());
+                    pst.setString(2, NamaPelanggan.getText());
+                    pst.setString(3, alamatPelanggan.getText());
+                    pst.setInt(4, idp2); // ID_Pelanggan
+
+                  
+                   
+                }
+                String updateTanggalPengirimanSQL = "UPDATE Pesanan SET Tanggal_Pengiriman = ? WHERE ID_Pesanan = ?";
+                try (PreparedStatement pst = con.prepareStatement(updateTanggalPengirimanSQL)) {
+                    // Set values for parameters in the update statement
+                    java.sql.Date sqlDate = new java.sql.Date(TanggalPengiriman.getDate().getTime());
+                    pst.setDate(1, sqlDate);
+                    pst.setInt(2, idP);
+
+                   
+                    
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+        addDetailPemesanan.setVisible(true);
+        deleteDetailPemesanan.setVisible(true);
+        TambahData.setVisible(true);
+        resetBtn.setVisible(true);
+        jLabel5.setVisible(true);
+        jComboBox1.setVisible(true);
+        jLabel4.setVisible(true);
+        JumlahPesanan.setVisible(true);
+        EditData.setVisible(false);
+        resetPemesanan();
+
+
+    }//GEN-LAST:event_EditDataActionPerformed
+
+    private void TambahDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TambahDataActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tabelDetailPemesanan.getModel();
+        int IDPelanggan = 0;
+        int IDPesanan = 0;
+        if (model.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Perlukan Data Pada detail pemesanan", "No Data", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String insertPelangganSQL = "INSERT INTO Pelanggan (Nama_Pelanggan, NoTelp_Pelanggan, Alamat_Pelanggan) VALUES (?, ?, ?)";
+
+        try (PreparedStatement pst = con.prepareStatement(insertPelangganSQL, Statement.RETURN_GENERATED_KEYS)) {
+            pst.setString(1, NamaPelanggan.getText());
+            pst.setString(2, noTelpPelanggan.getText());
+            pst.setString(3, alamatPelanggan.getText());
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows > 0) {
+                // Retrieving the generated keys
+                try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        IDPelanggan = generatedKeys.getInt(1);
+                    } else {
+                        System.err.println("No generated keys available.");
+                    }
+                }
+            } else {
+                System.err.println("No rows affected.");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+        try {
+            // Connection to the database
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                    + "database=ProjectBD;"
+                    + "user=sa;"
+                    + "password=Eufraa7183;"
+                    + "encrypt=false;"
+                    + "trustServerCertificate=false;"
+                    + "loginTimeout=30;";
+            Connection con = DriverManager.getConnection(url);
+
+            // Insert into Pelanggan table
+            String insertPesanan = "INSERT INTO Pesanan (ID_Pelanggan, Tanggal_Pengiriman, Total_Pesanan) VALUES (?, ?, 0)";
+            try (PreparedStatement pst = con.prepareStatement(insertPesanan, Statement.RETURN_GENERATED_KEYS)) {
+                pst.setInt(1, IDPelanggan);
+                java.sql.Date sqlDate = new java.sql.Date(TanggalPengiriman.getDate().getTime());
+                pst.setDate(2, sqlDate);
+
+                int affectedRows = pst.executeUpdate();
+
+                if (affectedRows > 0) {
+                    // Retrieving the generated keys
+                    try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            IDPesanan = generatedKeys.getInt(1);
+                        } else {
+                            System.err.println("No generated keys available.");
+                        }
+                    }
+                } else {
+                    System.err.println("No rows affected.");
+                }
+            }
+
+            // Execute InsertPesananAndDetailPesanan stored procedure
+            String insertProcedureSQL = "INSERT INTO Detail_Pesanan (ID_Pesanan, ID_Menu, Banyak_Barang, Jumlah)\n"
+                    + "SELECT\n"
+                    + "    ? AS ID_Pesanan, \n"
+                    + "    ID_Menu_T AS ID_Menu,\n"
+                    + "    Banyak_Barang_T AS Banyak_Barang,\n"
+                    + "    0 AS Jumlah\n"
+                    + "FROM\n"
+                    + "    DetailPesananType\n"
+                    + "JOIN\n"
+                    + "    Menu ON DetailPesananType.ID_Menu_T = Menu.ID_Menu;";
+
+            try (PreparedStatement pst = con.prepareStatement(insertProcedureSQL)) {
+                pst.setInt(1, IDPesanan);
+                // Set the value for @DetailPesananTable if needed
+
+                pst.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(null, "Data Berhasil");
+            resetPemesanan();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+    }//GEN-LAST:event_TambahDataActionPerformed
+
+    private void NamaPelangganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NamaPelangganActionPerformed
+        try {
+            String namaPelanggan = NamaPelanggan.getText();
+            // Lakukan sesuatu dengan namaPelanggan
+        } catch (Exception e) {
+            // Tangani kesalahan di sini
+            e.printStackTrace(); // atau Anda bisa melakukan hal lain, misalnya menampilkan pesan kesalahan
+        }
+
+
+    }//GEN-LAST:event_NamaPelangganActionPerformed
+
+    private void KeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_KeluarActionPerformed
+        Dashbord d = new Dashbord();
+        d.show();
+
+        dispose();
+    }//GEN-LAST:event_KeluarActionPerformed
+
+    private void addDetailPemesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDetailPemesananActionPerformed
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url
+                    = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                    + "database=ProjectBD;"
+                    + "user=sa;"
+                    + "password=Eufraa7183;"
+                    + "encrypt=false;"
+                    + "trustServerCertificate=false;"
+                    + "loginTimeout=30;";
+            con = DriverManager.getConnection(url);
+            String selectSql = "SELECT ID_Menu FROM Menu WHERE Nama_Menu = ?";
+            pst = con.prepareStatement(selectSql);
+            pst.setString(1, jComboBox1.getSelectedItem().toString());
+
+            ResultSet rs = pst.executeQuery();
+
+            int idMenu = 0;
+
+            if (rs.next()) {
+                idMenu = rs.getInt("ID_Menu");
+                // Now you can use the idMenu as needed
+            } else {
+                // Handle the case where no matching record was found
+                System.out.println("No matching record found for Nama_Menu: " + jComboBox1.getSelectedItem().toString());
+                return; // or throw an exception or handle it accordingly
+            }
+
+            String insertSql = "INSERT INTO DetailPesananType (ID_Menu_T,Nama_Menu_T, Banyak_Barang_T) VALUES (?,?,?)";
+            pst = con.prepareStatement(insertSql);
+            pst.setInt(1, idMenu);
+            pst.setString(2, jComboBox1.getSelectedItem().toString());
+            pst.setInt(3, Integer.parseInt(JumlahPesanan.getText()));
+
+            pst.executeUpdate();
+
+            // Fetch data from the database
+            String sql = "SELECT * FROM DetailPesananType";
+            pst = con.prepareStatement(sql);
+            rs = pst.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+
+            // Update the JTable
+            DefaultTableModel model = (DefaultTableModel) tabelDetailPemesanan.getModel();
+            model.setRowCount(0); // Clear existing data
+            int cols = rsmd.getColumnCount();
+            String[] colName = new String[cols];
+            colName[0] = "Menu ID";
+            model.setColumnIdentifiers(colName);
+            colName[1] = "Nama Menu";
+            model.setColumnIdentifiers(colName);
+            colName[2] = "Banyak Barang";
+            model.setColumnIdentifiers(colName);
+
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("ID_Menu_T"),
+                    rs.getString("Nama_Menu_T"),
+                    rs.getInt("Banyak_Barang_T"), // Add more columns as needed
+                };
+                model.addRow(row);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+
+        }
+    }//GEN-LAST:event_addDetailPemesananActionPerformed
+
+    private void deleteDetailPemesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteDetailPemesananActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tabelDetailPemesanan.getModel();
+
+        if (tabelDetailPemesanan.getRowCount() == 0) {
+            //no data
+            JOptionPane.showMessageDialog(this, "Tidak ada Pemesanan yang bisa dihapus");
+            return;
+        }
+        int selectedRow = tabelDetailPemesanan.getSelectedRow();
+        if (tabelDetailPemesanan.getSelectedRowCount() == 1) {
+            //single row
+
+            String namaMenu = model.getValueAt(selectedRow, 1).toString();
+            try {
+                Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+                String url
+                        = "jdbc:sqlserver://localhost\\MSSQLSERVER;"
+                        + "database=ProjectBD;"
+                        + "user=sa;"
+                        + "password=Eufraa7183;"
+                        + "encrypt=false;"
+                        + "trustServerCertificate=false;"
+                        + "loginTimeout=30;";
+                con = DriverManager.getConnection(url);
+                String deleteSql = "DELETE FROM DetailPesananType WHERE Nama_Menu_T = ?";
+                try (PreparedStatement deletePst = con.prepareStatement(deleteSql)) {
+                    deletePst.setString(1, namaMenu);
+                    deletePst.executeUpdate();
+                    model.removeRow(selectedRow); // Remove selected row from the table model if deleteSql is successful
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Tidak Bisa Diedit");
+                    return;
+
+                }
+
+                // Step 2: Remove the row from the JTable
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
+
+            }
+
+        } else {
+            //jika ga kosong dan row ga diselect
+            JOptionPane.showMessageDialog(this, "Pilih row yang ingin dihapus");
+
+        }
+    }//GEN-LAST:event_deleteDetailPemesananActionPerformed
+
+    private void JumlahPesananActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JumlahPesananActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JumlahPesananActionPerformed
+
+    private void cariDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariDataActionPerformed
+        int pesananID = Integer.parseInt(idPesanan.getText());
+       
+        try {
+            // Fetch customer information
+            String customerQuery = "SELECT Nama_Pelanggan, Alamat_Pelanggan, NoTelp_Pelanggan, Tanggal_Pengiriman "
+                    + "FROM Pesanan p JOIN Pelanggan pel ON p.ID_Pelanggan = pel.ID_Pelanggan "
+                    + "WHERE p.ID_Pesanan = ?";
+            pst = con.prepareStatement(customerQuery);
+            pst.setInt(1, pesananID);
+            ResultSet customerResult = pst.executeQuery();
+            resetPemesanan();
+            idPesanan.setText(String.valueOf(pesananID));
+
+            if (customerResult.next()) {
+                String namaPelanggan = customerResult.getString("Nama_Pelanggan");
+                String alamatPelanggant = customerResult.getString("Alamat_Pelanggan");
+                String noTelpPelanggant = customerResult.getString("NoTelp_Pelanggan");
+                Date tanggalPengirimant = customerResult.getDate("Tanggal_Pengiriman");
+
+                // Display customer information
+                NamaPelanggan.setText(namaPelanggan);
+                alamatPelanggan.setText(alamatPelanggant);
+                noTelpPelanggan.setText(noTelpPelanggant);
+                TanggalPengiriman.setDate(tanggalPengirimant);
+
+                // Fetch and display order details
+                String orderDetailsQuery = "SELECT m.Nama_Menu, dp.Banyak_Barang, dp.Jumlah "
+                        + "FROM Detail_Pesanan dp JOIN Menu m ON dp.ID_Menu = m.ID_Menu "
+                        + "WHERE dp.ID_Pesanan = ?";
+                pst = con.prepareStatement(orderDetailsQuery);
+                pst.setInt(1, pesananID);
+                ResultSet orderDetailsResult = pst.executeQuery();
+
+                DefaultTableModel model = (DefaultTableModel) tabelDetailPemesanan.getModel();
+                model.setRowCount(0); // Clear existing rows in the table
+
+// Get column count and names
+                int cols = orderDetailsResult.getMetaData().getColumnCount();
+                String[] colName = new String[cols];
+                for (int i = 0; i < cols; i++) {
+                    colName[i] = orderDetailsResult.getMetaData().getColumnName(i + 1);
+                }
+
+// Set column identifiers after the loop
+                model.setColumnIdentifiers(colName);
+
+// Populate the table with data
+                while (orderDetailsResult.next()) {
+                    Object[] rowData = new Object[cols];
+                    for (int i = 0; i < cols; i++) {
+                        rowData[i] = orderDetailsResult.getObject(i + 1);
+                    }
+                    model.addRow(rowData);
+                }
+                 EditData.setVisible(true);
+        addDetailPemesanan.setVisible(false);
+        deleteDetailPemesanan.setVisible(false);
+        TambahData.setVisible(false);
+        resetBtn.setVisible(false);
+
+        jLabel5.setVisible(false);
+        jComboBox1.setVisible(false);
+        jLabel4.setVisible(false);
+        JumlahPesanan.setVisible(false);
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Order with ID " + pesananID + " not found.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error executing query: " + e.getMessage());
+        }
+    }//GEN-LAST:event_cariDataActionPerformed
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        resetPemesanan();
+    }//GEN-LAST:event_resetBtnActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Pemesanan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Pemesanan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Pemesanan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Pemesanan.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Pemesanan().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton EditData;
+    private javax.swing.JTextField JumlahPesanan;
+    private javax.swing.JButton Keluar;
+    private javax.swing.JTextField NamaPelanggan;
+    private javax.swing.JButton TambahData;
+    private com.toedter.calendar.JDateChooser TanggalPengiriman;
+    private javax.swing.JButton addDetailPemesanan;
+    private javax.swing.JTextField alamatPelanggan;
+    private javax.swing.JButton cariData;
+    private javax.swing.JButton deleteDetailPemesanan;
+    private javax.swing.JTextField idPesanan;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextField noTelpPelanggan;
+    private javax.swing.JButton resetBtn;
+    private javax.swing.JTable tabelDetailPemesanan;
+    // End of variables declaration//GEN-END:variables
+}
